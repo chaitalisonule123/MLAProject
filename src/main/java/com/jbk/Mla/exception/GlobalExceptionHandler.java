@@ -34,8 +34,8 @@ public class GlobalExceptionHandler {
 		return map;
 	}
 	
-	@ExceptionHandler(ProductAlreadyExistsException.class)
-	public ResponseEntity<String>ProductAlreadyExistsException(ProductAlreadyExistsException ex){
+	@ExceptionHandler(MlaAlreadyExistsException.class)
+	public ResponseEntity<String>ProductAlreadyExistsException(MlaAlreadyExistsException ex){
 		String msg =ex.getMessage();
 		return new ResponseEntity<String>(msg,HttpStatus.OK);
 		

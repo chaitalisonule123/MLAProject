@@ -1,8 +1,8 @@
 package com.jbk.Mla.exception;
 
-public class ProductAlreadyExistsException extends RuntimeException{
+public class MlaAlreadyExistsException extends RuntimeException{
 	//default constructor
-	public ProductAlreadyExistsException(String msg){
+	public MlaAlreadyExistsException(String msg){
 		
 		super(msg);
 		//raha se msg runtimeexception(parent class or super class) ko de diya

@@ -2,6 +2,7 @@ package com.jbk.Mla.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jbk.Mla.entity.Mla;
+import com.jbk.Mla.exception.MlaAlreadyExistsException;
+import com.jbk.Mla.exception.MlaNotFoundException;
 import com.jbk.Mla.service.MlaService;
 
 //incoming request ko map karata hai and responce ko transfer krta hai controller
@@ -35,16 +39,14 @@ public class MlaController {
 	private  MlaService service;
 	//container se service ko load kraega.
 	
-
-	@PostMapping(value= "/savemla")
+ 
 	 public ResponseEntity<Boolean> saveMla(@Valid @RequestBody Mla mla){
 		boolean isAdded = service.saveMla(mla);
 
 		if (isAdded) {
 			return new ResponseEntity<Boolean>(isAdded, HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<Boolean>(HttpStatus.NO_CONTENT);
- 
+			throw new MlaAlreadyExistsException("Mla already exists with ID = " + mla.getMlaId());
 		}
 
 	} //
@@ -77,7 +79,7 @@ public class MlaController {
 	            	  //succesfully api hit hui to ok ka status code denge.
 	              }
 	              else {
-	            	  return new ResponseEntity<Mla>(HttpStatus.NO_CONTENT);
+	            	  throw new MlaNotFoundException("Mla Not Found for ID = " );
 	              }		 
 		 
 	 }//
@@ -95,10 +97,66 @@ public class MlaController {
 	public ResponseEntity<Boolean> deleteMla (@RequestParam int id){
 
 		boolean isDeleted =service.deleteMla(id);
-		return new ResponseEntity<Boolean>(isDeleted, HttpStatus.OK); 
-		
-		
+		throw new MlaNotFoundException( "mla not found");
 	}
+		
+		
+	
+	
+	@GetMapping(value = "/sortmlabyidasc")
+	public ResponseEntity<List<Mla>> sortMlaById_ASC() {
+
+		List<Mla> list = service.sortMlaById_ASC();
+
+		if (!list.isEmpty()) {
+			return new ResponseEntity<List<Mla>>(list, HttpStatus.OK);
+		} else {
+			throw new MlaNotFoundException("mla Not Found");
+		}
+
+	}
+
+	@GetMapping(value = "/sortmlabyiddesc")
+	public ResponseEntity<List<Mla>> sortMlaById_DESC() {
+
+		List<Mla> list = service.sortMlaById_DESC();
+
+		if (!list.isEmpty()) {
+			return new ResponseEntity<List<Mla>>(list, HttpStatus.OK);
+		} else {
+			throw new MlaNotFoundException("Mla Not Found");
+		}
+
+	}
+	
+	@GetMapping(value = "/sortmlabynameasc")
+	public ResponseEntity<List<Mla>> sortMlaByName_ASC() {
+
+		List<Mla> list = service.sortMlaByName_ASC();
+
+		if (!list.isEmpty()) {
+			return new ResponseEntity<List<Mla>>(list, HttpStatus.OK);
+		} else {
+			throw new MlaNotFoundException("Mla Not Found");
+		}
+
+	}
+
+	@GetMapping(value = "/sortmlabynamedesc")
+	public ResponseEntity<List<Mla>> sortMlaByName_DESC() {
+
+		List<Mla> list = service.sortMlaByName_DESC();
+
+		if (!list.isEmpty()) {
+			return new ResponseEntity<List<Mla>>(list, HttpStatus.OK);
+		} else {
+			throw new MlaNotFoundException("Mla Not Found");
+		}
+
+	}
+
+
+	
 	
 	@GetMapping(value = "/gettotalcountofmla")
    public ResponseEntity<Long> getTotalCountOfMla() {
@@ -107,8 +165,7 @@ public class MlaController {
 		if (count > 0)
 			return new ResponseEntity<Long>(count, HttpStatus.OK);
 		else {
-			return new ResponseEntity<Long>(HttpStatus.NO_CONTENT);
-
+			throw new MlaNotFoundException("Mla Not Found");
 		}
 	   
 	     
@@ -120,8 +177,7 @@ public class MlaController {
 			if (avg > 0)
 				return new ResponseEntity<Double>(avg, HttpStatus.OK);
 			else {
-				return new ResponseEntity<Double>(HttpStatus.NO_CONTENT);
-
+				throw new MlaNotFoundException("Mla Not Found");
 			}
 		
 		 
@@ -135,12 +191,22 @@ public class MlaController {
 				
 			}
 			else {
-				return new ResponseEntity<Mla>( HttpStatus.NO_CONTENT);  
+				throw new MlaNotFoundException("Mla Not Found"); 
 			} 
 		 
 	 }
 	
-	
+	@PostMapping(value = "/uploadsheet")
+	public ResponseEntity<String> uploadExcelSheet(@RequestParam MultipartFile file, HttpSession session) {
+
+		String message = service.uploadExcelSheet(file, session);
+
+		if (message != null) {
+			return new ResponseEntity<String>(message, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+	}
 
 	
 	

@@ -335,4 +335,118 @@ public class MlaDaoImpl implements MlaDao {
 		
 	}
 
-}
+
+	@Override
+	public List<Mla> sortMlaById_ASC() {
+		Session session = sessionFactory.openSession();
+		List<Mla> list = null;
+		try {
+			Criteria criteria = session.createCriteria(Mla.class);
+			criteria.addOrder(Order.asc("mlaName"));
+			list = criteria.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return list;	
+		
+		
+	}
+
+
+	@Override
+	public List<Mla> sortMlaById_DESC() {
+
+		Session session = sessionFactory.openSession();
+		List<Mla> list = null;
+		try {
+			Criteria criteria = session.createCriteria(Mla.class);
+			criteria.addOrder(Order.desc("mlaName"));
+			list = criteria.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return list;
+		
+		
+	}
+
+
+	@Override
+	public List<Mla> sortMlaByName_ASC() {
+		Session session = sessionFactory.openSession();
+		List<Mla> list = null;
+		try {
+			Criteria criteria = session.createCriteria(Mla.class);
+			criteria.addOrder(Order.asc("mlaName"));
+			list = criteria.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return list;
+
+	
+	}
+
+
+	@Override
+	public List<Mla> sortMlaByName_DESC() {
+		Session session = sessionFactory.openSession();
+		List<Mla> list = null;
+		try {
+			Criteria criteria = session.createCriteria(Mla.class);
+			criteria.addOrder(Order.desc("mlaName"));
+			list = criteria.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return list;
+
+	}
+
+
+	@Override
+	public int excelToDatabase(List<Mla> list) {
+		int count = 0;
+
+		for (Mla mla : list) {
+
+	boolean added = saveMla(mla);
+
+			if (added) {
+				count++;
+
+			}
+		}
+		return count;
+		
+	}
+
+
+	
+	}
+
+
